@@ -7,6 +7,7 @@ namespace Modules.Common
     public class ProgressData : IProgressData
     {
         private readonly Level _level = new();
+        private readonly Score _score = new();
         private readonly IPersistent _persistent;
 
         public ProgressData(IPersistent persistent)
@@ -15,6 +16,7 @@ namespace Modules.Common
         }
 
         public Level Level => _level;
+        public Score Score => _score;
 
         public void OnApplicationQuit() => SaveProgress();
 
@@ -26,7 +28,8 @@ namespace Modules.Common
         {
             var currentSavData = new Dictionary<string, ISaveModel>()
             {
-                { _level.Key, _level }
+                { _level.Key, _level },
+                { _score.Key, _score }
             };
 
             _persistent.SavePersistantData(currentSavData);
@@ -34,13 +37,15 @@ namespace Modules.Common
 
         public void LoadProgress()
         {
-            var levelLoaded = _persistent.GetPersistentData(_level.Key);
-            if (levelLoaded == null)
+            var level = _persistent.GetPersistentData(_level.Key);
+            var score = _persistent.GetPersistentData(_score.Key);
+            if (level == null)
             {
                 return;
             }
 
-            _level.CurrentLevel = ((Level)levelLoaded).CurrentLevel;
+            _level.CurrentLevel = ((Level)level).CurrentLevel;
+            _score.CurrentScore = ((Score)score).CurrentScore;
         }
     }
 }

@@ -36,7 +36,7 @@ namespace Modules.Core
             var loadProgressDataState = new LoadProgressDataState(_dataService.ProgressData,
                 _dataService.ApplicationCache, _lifecycleService, _gameStateMachine);
             var loadLevelState = new LoadLevelState(_audioService, _factoryService.SceneFactory,
-                _factoryService.UIFactory, _sceneTransitionService, _gameStateMachine);
+                _factoryService.UIFactory, _sceneTransitionService, _gameStateMachine,_dataService.ProgressData);
             var gameLoopState = new GameLoopState(_dataService.ProgressData.Level, _inputService.InputSource,
                 _audioService, _sceneTransitionService, _gameStateMachine);
 
