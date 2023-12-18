@@ -1,12 +1,15 @@
-﻿namespace Modules.Common
+﻿using UnityEngine;
+
+namespace Modules.Common
 {
     public struct InputEventData
     {
-        public bool IsTapDown { get; }
+        public bool IsDraggingStarted { get; }
+        public Vector2 InputPosition { get; }
 
-        public InputEventData(bool isTapDown)
-        {
-            IsTapDown = isTapDown;
+        public InputEventData(Vector2 inputPosition, bool isDraggingStarted) {
+            InputPosition = inputPosition;
+            IsDraggingStarted = isDraggingStarted;
         }
     }
 }

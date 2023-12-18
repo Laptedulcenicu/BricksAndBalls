@@ -5,77 +5,77 @@ namespace Modules.Gameplay
 {
     public class InteractableController : MonoBehaviour
     {
-        private const float k_SizeSpeedChange = 0.2f;
-
         private IInputSource _inputSource;
-        private SizeConverter _sizeConverter;
         private PlayerView _playerView;
-        private InputEventData _inputEventData = new(false);
-
+        private InputEventData _inputEventData = new(Vector2.zero, false);
         public bool CanControl { get; set; }
-
-        private void Update()
-        {
-            if (!CanControl)
-                return;
-
-            ChangeSize();
-        }
 
         private void OnDestroy() => RemoveInputListeners();
 
-        public void Initialize(IInputSource inputSource, SizeConverter sizeConverter, PlayerView playerView)
+        public void Initialize(IInputSource inputSource, PlayerView playerView)
         {
-            _sizeConverter = sizeConverter;
             _inputSource = inputSource;
             _playerView = playerView;
             CanControl = true;
             AddInputListeners();
         }
 
-        private void ChangeSize()
+        private void InputSourceOnTap(InputEventData inputEventData)
         {
-            if (_inputEventData.IsTapDown)
-            {
-                _sizeConverter.ChangeSize(Time.deltaTime * k_SizeSpeedChange);
-            }
+            Debug.Log("InputSourceOnTap");
+            if (!CanControl) return;
+            _playerView.ReflectionLine.SetActive(true);
         }
 
-        private void InputSourceOnTapDown(InputEventData inputEventData)
+        private void InputSourceOnDragStarted(InputEventData inputEventData)
         {
-            if (CanControl)
-            {
-                if (_playerView.PlayerShoot.CurrentActiveBullet == null)
-                {
-                    _playerView.PlayerShoot.InitializeBullet();
-                }
-            }
-
             _inputEventData = inputEventData;
+            Debug.Log("InputSourceOnDragStarted");
+        }
+
+        private void InputSourceOnDragging(InputEventData inputEventData)
+        {
+            _inputEventData = inputEventData;
+            if (!CanControl) return;
+
+
+            Vector3 lookAtPosition = GetLookAtPosition(_inputEventData.InputPosition);
+            _playerView.transform.LookAt(new Vector3(lookAtPosition.x, _playerView.transform.position.y,
+                lookAtPosition.z));
+            Debug.Log("InputSourceOnDragging");
         }
 
         private void InputSourceOnDrop(InputEventData inputEventData)
         {
             _inputEventData = inputEventData;
-
+            Debug.Log("InputSourceOnDrop");
             if (!CanControl) return;
-            if (_playerView.PlayerShoot.CanShoot())
-            {
-                _playerView.PlayerShoot.Shoot();
-                CanControl = false;
-            }
+            _playerView.ReflectionLine.SetActive(false);
+            // _playerView.PlayerShoot.Shoot();
+            CanControl = false;
+        }
+
+        private Vector3 GetLookAtPosition(Vector3 inputPosition)
+        {
+            var ray = Camera.main.ScreenPointToRay(inputPosition);
+            Physics.Raycast(ray, out var hit, 300);
+            return hit.point;
         }
 
         private void AddInputListeners()
         {
-            _inputSource.OnTapDown += InputSourceOnTapDown;
+            _inputSource.OnTap += InputSourceOnTap;
             _inputSource.OnDrop += InputSourceOnDrop;
+            _inputSource.OnDragging += InputSourceOnDragging;
+            _inputSource.OnDragStarted += InputSourceOnDragStarted;
         }
 
         private void RemoveInputListeners()
         {
-            _inputSource.OnTapDown -= InputSourceOnTapDown;
+            _inputSource.OnTap -= InputSourceOnTap;
             _inputSource.OnDrop -= InputSourceOnDrop;
+            _inputSource.OnDragging -= InputSourceOnDragging;
+            _inputSource.OnDragStarted -= InputSourceOnDragStarted;
         }
     }
 }

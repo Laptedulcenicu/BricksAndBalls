@@ -10,6 +10,7 @@ namespace Modules.Gameplay
         [SerializeField] private SizeSetter sizeSetter;
         [SerializeField] private PlayerShoot playerShoot;
         [SerializeField] private PlayerMinimSizeChecker playerMinimSizeChecker;
+        [SerializeField] private GameObject reflectionLine;
 
         public PlayerShoot PlayerShoot => playerShoot;
 
@@ -19,20 +20,14 @@ namespace Modules.Gameplay
 
         public PlayerMover PlayerMover => playerMover;
 
+        public GameObject ReflectionLine => reflectionLine;
+
         public void Initialize(GameLoopEvents gameLoopEvents, KilledEnemyChecker killedEnemyChecker, IAudioService audioService)
         {
-            playerMinimSizeChecker.Initialize(gameLoopEvents);
-            playerShoot.Initialize(killedEnemyChecker,audioService);
-            triggerObserver.TriggerEnter += TriggerEnter;
+            // playerMinimSizeChecker.Initialize(gameLoopEvents);
+            // playerShoot.Initialize(killedEnemyChecker,audioService);
+            // triggerObserver.TriggerEnter += TriggerEnter;
         }
-
-        private void TriggerEnter(Collider other)
-        {
-            if (other.CompareTag(Tags.Gate))
-            {
-                if (!other.TryGetComponent(out IInteractable interactable)) return;
-                interactable.Interact();
-            }
-        }
+        
     }
 }

@@ -35,15 +35,14 @@ namespace Modules.Core
 
         public void Enter()
         {
-            // _gameLoopEvents = new GameLoopEvents();
-            // var scene = SceneManager.GetActiveScene();
-            // var sceneController = scene.GetComponent<GameplaySceneController>();
+             _gameLoopEvents = new GameLoopEvents();
+             var scene = SceneManager.GetActiveScene();
+             var sceneController = scene.GetComponent<GameplaySceneController>();
             // _sizeConverter = new SizeConverter(sceneController.Player, sceneController.LineView);
             // _killedEnemyChecker = new KilledEnemyChecker(sceneController.Player.PlayerMover, sceneController.LineView.EnemyDetector, sceneController.InteractableController);
             // InitializeGameplayUI(sceneController.UIController, sceneController.InteractableController);
             //
-            // sceneController.Initialize(_inputSource, _audioService, _sceneTransitionService, _gameLoopEvents,
-            //     _sizeConverter, _killedEnemyChecker);
+             sceneController.Initialize(_inputSource, _audioService, _sceneTransitionService, _gameLoopEvents);
         }
 
         private void InitializeGameplayUI(IUIController uiController, InteractableController interactableController)

@@ -14,10 +14,5 @@ namespace Modules.Services.FactoryService
 
         public GameObject CreatePlayer() => _assetProvider.Instantiate(AssetPath.PlayerPath);
 
-        public GameObject CreateGate() => _assetProvider.Instantiate(AssetPath.GatePath);
-
-        public GameObject CreateLineView() => _assetProvider.Instantiate(AssetPath.LineViewPath);
-
-        public GameObject CreateEnemy() => _assetProvider.Instantiate(AssetPath.EnemyPath);
     }
 }

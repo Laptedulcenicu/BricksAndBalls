@@ -8,37 +8,25 @@ namespace Modules.Gameplay
     {
         [SerializeField] private Transform inputControllerParent;
         [SerializeField] private InteractableController interactableController;
-        [SerializeField] private Transform playerMarker;
-        [SerializeField] private Transform gateMarker;
-        [SerializeField] private Transform lineViewMarker;
-        [SerializeField] private Transform[] enemiesMarkers;
+        [SerializeField] private Transform playerSpawnPoint;
+        [SerializeField] private Transform obstaclesParent;
 
         private IInputController _inputController;
         public PlayerView Player { get; set; }
-        public GateView GateView { get; set; }
-        public LineView LineView { get; set; }
         public List<EnemyView> Enemies { get; } = new();
         public IUIController UIController { get; set; }
 
-        public Transform PlayerMarker => playerMarker;
-
-        public Transform GateMarker => gateMarker;
-
-        public Transform LineViewMarker => lineViewMarker;
-
-        public Transform[] EnemiesMarkers => enemiesMarkers;
-
+        public Transform PlayerSpawnPoint => playerSpawnPoint;
+        
         public InteractableController InteractableController => interactableController;
 
 
-        public void Initialize(IInputSource inputSource, IAudioService audioService, ISceneTransitionService sceneTransitionService, GameLoopEvents gameLoopEvents, SizeConverter sizeConverter,
-            KilledEnemyChecker killedEnemyChecker)
+        public void Initialize(IInputSource inputSource, IAudioService audioService, ISceneTransitionService sceneTransitionService, GameLoopEvents gameLoopEvents)
         {
             SetInputSource(inputSource);
-            InitializeInteractableController(inputSource, sizeConverter);
-            InitializeEnemies(audioService);
-            GateView.Initialize(audioService, gameLoopEvents);
-            Player.Initialize(gameLoopEvents,killedEnemyChecker,audioService);
+            InitializeInteractableController(inputSource);
+  //          InitializeEnemies(audioService);
+//            Player.Initialize(gameLoopEvents,killedEnemyChecker,audioService);
             sceneTransitionService.FadeOut();
         }
 
@@ -56,7 +44,7 @@ namespace Modules.Gameplay
             _inputController.Setup(inputSource);
         }
 
-        private void InitializeInteractableController(IInputSource inputSource, SizeConverter sizeConverter) =>
-            interactableController.Initialize(inputSource, sizeConverter, Player);
+        private void InitializeInteractableController(IInputSource inputSource) =>
+            interactableController.Initialize(inputSource, Player);
     }
 }

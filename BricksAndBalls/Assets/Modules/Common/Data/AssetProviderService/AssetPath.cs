@@ -8,9 +8,6 @@
         public const string SoundControllerPath = "Services/SoundController";
 
         public const string PlayerPath = "Scene/Player";
-        public const string LineViewPath = "Scene/LineView";
-        public const string GatePath = "Scene/Gate";
-        public const string EnemyPath = "Scene/Enemy";
         public const string UI = "UI/GameplayCanvas";
     }
 }
