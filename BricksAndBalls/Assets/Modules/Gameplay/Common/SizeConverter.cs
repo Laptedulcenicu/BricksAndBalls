@@ -15,10 +15,7 @@
 
         public void ChangeSize(float sizeAmount)
         {
-            _playerView.SizeSetter.ChangeCurrentSize(-sizeAmount);
             _lineView.SizeSetter.ChangeCurrentSize(-sizeAmount);
-            _playerView.PlayerShoot.ChangeBulletSize(sizeAmount * k_SpeedSizeBullet);
-            _playerView.MinimSizeChecker.CheckMinimSize();
         }
     }
 }

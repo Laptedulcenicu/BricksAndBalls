@@ -26,7 +26,7 @@ namespace Modules.Gameplay
             SetInputSource(inputSource);
             InitializeInteractableController(inputSource);
   //          InitializeEnemies(audioService);
-//            Player.Initialize(gameLoopEvents,killedEnemyChecker,audioService);
+            Player.Initialize(gameLoopEvents,audioService);
             sceneTransitionService.FadeOut();
         }
 

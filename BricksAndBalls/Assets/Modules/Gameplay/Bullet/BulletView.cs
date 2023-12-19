@@ -1,4 +1,5 @@
-﻿using Modules.Common;
+﻿using System;
+using Modules.Common;
 using StansAssets.Foundation.Patterns;
 using UnityEngine;
 
@@ -6,49 +7,60 @@ namespace Modules.Gameplay
 {
     public class BulletView : MonoBehaviour
     {
+        [SerializeField] private float bulletSpeed;
         [SerializeField] private AudioClip bulletAudio;
         [SerializeField] private GameObject shootParticles;
-        [SerializeField] private TriggerObserver triggerObserver;
-        [SerializeField] private BulletDeathZone bulletDeathZone;
-        [SerializeField] private SizeSetter sizeSetter;
-        [SerializeField] private BulletMover bulletMover;
+        [SerializeField] private CollisionObserver collisionObserver;
+        [SerializeField] private Rigidbody rigidbody;
 
-        private KilledEnemyChecker _killedEnemyChecker;
         private PrefabPool _prefabPool;
         private IAudioService _audioService;
         private bool _isTouched;
-        public SizeSetter SizeSetter => sizeSetter;
+        private bool _isMoving;
+        private Vector3 _lastVelocity;
+        private Vector3 _direction;
 
-        public BulletMover BulletMover => bulletMover;
 
-        public BulletDeathZone DeathZone => bulletDeathZone;
-
-        public void Initialize(KilledEnemyChecker killedEnemyChecker, PrefabPool prefabPool, IAudioService audioService)
+        public void Initialize(PrefabPool prefabPool, IAudioService audioService)
         {
-            bulletMover.Initialize(killedEnemyChecker, prefabPool);
             _audioService = audioService;
-            _killedEnemyChecker = killedEnemyChecker;
             _prefabPool = prefabPool;
-            bulletDeathZone.EnemyList.Clear();
             _isTouched = false;
-            triggerObserver.TriggerEnter += TriggerEnter;
+            collisionObserver.CollisionEnter += CollisionEnter;
         }
 
-        private void TriggerEnter(Collider other)
+        private void FixedUpdate()
         {
-            if (_isTouched) return;
-            _isTouched = true;
-
-            if (other.CompareTag(Tags.Enemy))
+            if (rigidbody.velocity.magnitude < bulletSpeed)
             {
-                if (!other.TryGetComponent(out IInteractable _)) return;
-                Instantiate(shootParticles, transform.position, Quaternion.identity);
-                _audioService.PlayOneShotSound(bulletAudio,1);
-                bulletDeathZone.KillEnemies();
-                bulletMover.StopMove();
-                _prefabPool.Release(gameObject);
-                _killedEnemyChecker.CheckWinStatus();
+                rigidbody.velocity = _direction;
             }
+            _lastVelocity = rigidbody.velocity;
+        }
+
+        public void Move(Vector3 vel)
+        {
+            _isMoving = true;
+            rigidbody.isKinematic = false;
+            rigidbody.velocity = vel*bulletSpeed;
+            _direction = vel * bulletSpeed;
+        }
+
+        private void CollisionEnter(Collision other)
+        {
+            _direction = Vector3.Reflect(_lastVelocity.normalized, other.contacts[0].normal)*bulletSpeed;
+            rigidbody.velocity = _direction ;
+            // if (_isTouched) return;
+            // _isTouched = true;
+            //
+            // if (other.CompareTag(Tags.Enemy))
+            // {
+            //     if (!other.TryGetComponent(out IInteractable _)) return;
+            //     Instantiate(shootParticles, transform.position, Quaternion.identity);
+            //     _audioService.PlayOneShotSound(bulletAudio,1);
+            //     _prefabPool.Release(gameObject);
+            //     _killedEnemyChecker.CheckWinStatus();
+            // }
         }
     }
 }

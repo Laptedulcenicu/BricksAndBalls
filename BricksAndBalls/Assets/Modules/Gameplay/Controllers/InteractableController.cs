@@ -51,7 +51,7 @@ namespace Modules.Gameplay
             Debug.Log("InputSourceOnDrop");
             if (!CanControl) return;
             _playerView.ReflectionLine.SetActive(false);
-            // _playerView.PlayerShoot.Shoot();
+            _playerView.PlayerShoot.Shoot();
             CanControl = false;
         }
 
