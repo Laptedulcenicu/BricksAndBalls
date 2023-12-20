@@ -234,7 +234,7 @@ MonoBehaviour:
   inputControllerParent: {fileID: 1903408272}
   interactableController: {fileID: 1320868358}
   playerSpawnPoint: {fileID: 1840781175}
-  obstaclesParent: {fileID: 0}
+  obstaclesParent: {fileID: 1739579370}
 --- !u!1001 &87377327
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -432,7 +432,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 130442926}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 2b63881f57758d5408bc78b296c14eb6, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -939,7 +939,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 576375157}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 2b63881f57758d5408bc78b296c14eb6, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -1213,7 +1213,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 785877170}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 2b63881f57758d5408bc78b296c14eb6, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -2128,7 +2128,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1739069639}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 2b63881f57758d5408bc78b296c14eb6, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0

@@ -315,6 +315,7 @@ MonoBehaviour:
   bulletParent: {fileID: 7989189685070447021}
   bulletPrefab: {fileID: 8835485307585831834, guid: ecdda0f8c90a8a845b35df79fc6d10d1, type: 3}
   ballCounterText: {fileID: 8937832447151653052}
+  textParent: {fileID: 8801113555904778111}
   maxBullets: 20
 --- !u!1001 &5186170065397078995
 PrefabInstance:

@@ -1,5 +1,4 @@
-﻿using System;
-using Modules.Common;
+﻿using Modules.Common;
 using StansAssets.Foundation.Patterns;
 using UnityEngine;
 
@@ -15,7 +14,6 @@ namespace Modules.Gameplay
 
         private PrefabPool _prefabPool;
         private IAudioService _audioService;
-        private bool _isTouched;
         private bool _isMoving;
         private Vector3 _lastVelocity;
         private Vector3 _direction;
@@ -25,16 +23,15 @@ namespace Modules.Gameplay
         {
             _audioService = audioService;
             _prefabPool = prefabPool;
-            _isTouched = false;
             collisionObserver.CollisionEnter += CollisionEnter;
         }
 
         private void FixedUpdate()
         {
-            if (rigidbody.velocity.magnitude < bulletSpeed)
-            {
-                rigidbody.velocity = _direction;
-            }
+            if (!_isMoving)
+                return;
+
+            rigidbody.velocity = _direction;
             _lastVelocity = rigidbody.velocity;
         }
 
@@ -42,25 +39,19 @@ namespace Modules.Gameplay
         {
             _isMoving = true;
             rigidbody.isKinematic = false;
-            rigidbody.velocity = vel*bulletSpeed;
             _direction = vel * bulletSpeed;
+            rigidbody.velocity = _direction;
         }
 
         private void CollisionEnter(Collision other)
         {
-            _direction = Vector3.Reflect(_lastVelocity.normalized, other.contacts[0].normal)*bulletSpeed;
-            rigidbody.velocity = _direction ;
-            // if (_isTouched) return;
-            // _isTouched = true;
-            //
-            // if (other.CompareTag(Tags.Enemy))
-            // {
-            //     if (!other.TryGetComponent(out IInteractable _)) return;
-            //     Instantiate(shootParticles, transform.position, Quaternion.identity);
-            //     _audioService.PlayOneShotSound(bulletAudio,1);
-            //     _prefabPool.Release(gameObject);
-            //     _killedEnemyChecker.CheckWinStatus();
-            // }
+            _direction = Vector3.Reflect(_lastVelocity.normalized, other.contacts[0].normal) *
+                         Mathf.Max(bulletSpeed, 0);
+            rigidbody.velocity = _direction;
+
+
+            if (!other.gameObject.TryGetComponent(out IInteractable interactable)) return;
+            interactable.Interact(this);
         }
     }
 }

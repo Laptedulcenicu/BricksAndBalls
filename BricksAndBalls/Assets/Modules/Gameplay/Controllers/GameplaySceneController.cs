@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Modules.Common;
 using UnityEngine;
 
@@ -13,7 +12,6 @@ namespace Modules.Gameplay
 
         private IInputController _inputController;
         public PlayerView Player { get; set; }
-        public List<EnemyView> Enemies { get; } = new();
         public IUIController UIController { get; set; }
 
         public Transform PlayerSpawnPoint => playerSpawnPoint;
@@ -25,16 +23,17 @@ namespace Modules.Gameplay
         {
             SetInputSource(inputSource);
             InitializeInteractableController(inputSource);
-  //          InitializeEnemies(audioService);
+            InitializeObstacles(audioService);
             Player.Initialize(gameLoopEvents,audioService);
             sceneTransitionService.FadeOut();
         }
 
-        private void InitializeEnemies(IAudioService audioService)
+        private void InitializeObstacles(IAudioService audioService)
         {
-            foreach (var enemy in Enemies)
+            var obstaclesView = obstaclesParent.GetComponentsInChildren<ObstacleView>();
+            foreach (var obstacleView in obstaclesView)
             {
-                enemy.Initialize(audioService);
+                obstacleView.Initialize(audioService);
             }
         }
 

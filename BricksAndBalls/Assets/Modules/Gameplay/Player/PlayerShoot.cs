@@ -12,19 +12,20 @@ namespace Modules.Gameplay
         [SerializeField] private Transform bulletParent;
         [SerializeField] private GameObject bulletPrefab;
         [SerializeField] private TextMeshProUGUI ballCounterText;
+        [SerializeField] private Transform textParent;
         [SerializeField] private int maxBullets;
         private PrefabPool _bulletPool;
         private BulletView _currentActiveBullet;
         private IAudioService _audioService;
         private readonly WaitForSeconds _waitForSeconds = new(0.1f);
         private int _countBalls;
-        public BulletView CurrentActiveBullet => _currentActiveBullet;
 
         public void Initialize(IAudioService audioService)
         {
             _audioService = audioService;
             _bulletPool = new PrefabPool(bulletPrefab);
             _countBalls = maxBullets;
+            textParent.parent = null;
             ballCounterText.text = "x" + _countBalls;
             InitializeBullet();
         }
