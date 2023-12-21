@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Modules.Services.AssetProviderService
 {
-    public class AssetProviderServiceService : IAssetProviderService
+    public class AssetProviderService : IAssetProviderService
     {
         public GameObject Instantiate(string path, Vector3 at)
         {

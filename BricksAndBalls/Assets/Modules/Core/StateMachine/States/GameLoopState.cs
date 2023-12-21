@@ -7,21 +7,21 @@ namespace Modules.Core
 {
     public class GameLoopState : IState
     {
-        private readonly ProgressData _progressData;
+        private const int k_MaxBallCount = 50;
         private readonly IInputSource _inputSource;
         private readonly IAudioService _audioService;
         private readonly GameStateMachine _gameStateMachine;
         private readonly ISceneTransitionService _sceneTransitionService;
-        private readonly Level _level;
+        private readonly IProgressData _progressData;
 
         private GameLoopEvents _gameLoopEvents;
-        private SizeConverter _sizeConverter;
-        private KilledEnemyChecker _killedEnemyChecker;
+        private ScoreCounter _scoreCounter;
+        private IUIController _UIController;
 
-        public GameLoopState(Level level, IInputSource inputSource, IAudioService audioService,
+        public GameLoopState(IProgressData progressData, IInputSource inputSource, IAudioService audioService,
             ISceneTransitionService sceneTransitionService, GameStateMachine gameStateMachine)
         {
-            _level = level;
+            _progressData = progressData;
             _inputSource = inputSource;
             _audioService = audioService;
             _gameStateMachine = gameStateMachine;
@@ -35,37 +35,71 @@ namespace Modules.Core
 
         public void Enter()
         {
-             _gameLoopEvents = new GameLoopEvents();
-             var scene = SceneManager.GetActiveScene();
-             var sceneController = scene.GetComponent<GameplaySceneController>();
-            // _sizeConverter = new SizeConverter(sceneController.Player, sceneController.LineView);
-            // _killedEnemyChecker = new KilledEnemyChecker(sceneController.Player.PlayerMover, sceneController.LineView.EnemyDetector, sceneController.InteractableController);
-            // InitializeGameplayUI(sceneController.UIController, sceneController.InteractableController);
-            //
-             sceneController.Initialize(_inputSource, _audioService, _sceneTransitionService, _gameLoopEvents);
+            _gameLoopEvents = new GameLoopEvents();
+            var scene = SceneManager.GetActiveScene();
+            var sceneController = scene.GetComponent<GameplaySceneController>();
+            _UIController = sceneController.UIController;
+            _scoreCounter = new ScoreCounter(_progressData.Score);
+            var obstaclesController = new ObstaclesController(sceneController, _gameLoopEvents);
+            _gameLoopEvents.OnScoreIncrease += ScoreIncrease;
+            InitializeGameplayUI(sceneController.InteractableController);
+            sceneController.Initialize(k_MaxBallCount, _inputSource, _audioService, _sceneTransitionService,
+                _gameLoopEvents);
         }
 
-        private void InitializeGameplayUI(IUIController uiController, InteractableController interactableController)
+        private void InitializeGameplayUI(InteractableController interactableController)
         {
-            uiController.Initialize(_level.CurrentLevel);
-            uiController.OnRestart += RestartLevel;
-            uiController.OnNextLevel += RestartLevel;
-            uiController.OnPlay += uiController.Play;
-            _gameLoopEvents.OnWin += () => Win(uiController, interactableController);
-            _gameLoopEvents.OnFail += () => Fail(uiController, interactableController);
+            _UIController.Initialize(_progressData.Level.CurrentLevel);
+            _UIController.OnPlay += _UIController.Play;
+            _UIController.OnRestart += RestartLevel;
+            InitializeLeaderBoardPanel();
+            InitializeMultiplayPanel();
+            _UIController.SetScoreText(_scoreCounter.GameplayScore);
+            _gameLoopEvents.OnWin += () => Win(interactableController);
+            _gameLoopEvents.OnFail += () => Fail(interactableController);
         }
 
-        private void Fail(IUIController uiController, InteractableController interactableController)
+        private void InitializeLeaderBoardPanel()
+        {
+            _UIController.LeaderBoardPanel.OnRestart += RestartLevel;
+            _UIController.LeaderBoardPanel.OnNextLevel += () =>
+            {
+                _progressData.Level.CurrentLevel += 1;
+                _progressData.SaveProgress();
+                RestartLevel();
+            };
+        }
+
+        private void InitializeMultiplayPanel()
+        {
+            _UIController.MultiplayPanel.Onx1Multiplay += () => Multiplay(1);
+            _UIController.MultiplayPanel.Onx3Multiplay += () => Multiplay(3);
+            _UIController.MultiplayPanel.Onx5Multiplay += () => Multiplay(5);
+        }
+
+        private void Multiplay(int value)
+        {
+            _scoreCounter.Multiplay(value);
+            _progressData.Score.CurrentScore = _scoreCounter.GameplayScore;
+            _UIController.OpenLeaderboard(_progressData.Score.CurrentScore);
+        }
+
+        private void ScoreIncrease()
+        {
+            _scoreCounter.IncreaseScore();
+            _UIController.SetScoreText(_scoreCounter.GameplayScore);
+        }
+
+        private void Fail(InteractableController interactableController)
         {
             interactableController.CanControl = false;
-            uiController.ActivateLosePanel();
+            _UIController.ActivateLosePanel();
         }
 
-        private void Win(IUIController uiController, InteractableController interactableController)
+        private void Win(InteractableController interactableController)
         {
-            _level.CurrentLevel += 1;
             interactableController.CanControl = false;
-            uiController.ActivateWinPanel();
+            _UIController.ActivateWinPanel();
         }
     }
 }

@@ -8,21 +8,19 @@ namespace Modules.Core
 {
     public class LoadLevelState : IState
     {
-        private const string k_SceneName = "Lv ";
+        private const string k_SceneName = "Lv 1";
 
         private readonly IUIFactory _uiFactory;
-        private readonly IAudioService _audioService;
         private readonly ISceneFactory _sceneFactory;
         private readonly ISceneTransitionService _transitionService;
         private readonly GameStateMachine _gameStateMachine;
         private readonly IProgressData _progressData;
 
-        public LoadLevelState(IAudioService audioService, ISceneFactory sceneFactory, IUIFactory uiFactory,
+        public LoadLevelState(ISceneFactory sceneFactory, IUIFactory uiFactory,
             ISceneTransitionService sceneTransitionService, GameStateMachine gameStateMachine,
             IProgressData progressData)
         {
             _uiFactory = uiFactory;
-            _audioService = audioService;
             _sceneFactory = sceneFactory;
             _transitionService = sceneTransitionService;
             _gameStateMachine = gameStateMachine;
@@ -32,7 +30,7 @@ namespace Modules.Core
 
         public void Enter()
         {
-            _transitionService.ChangeScene(k_SceneName + _progressData.Level.CurrentLevel, SceneLoaded);
+            _transitionService.ChangeScene(k_SceneName, SceneLoaded);
         }
 
         private void SceneLoaded()
@@ -40,8 +38,8 @@ namespace Modules.Core
             var scene = SceneManager.GetActiveScene();
             var sceneController = scene.GetComponent<GameplaySceneController>();
 
-               InitScene(sceneController);
-            //   InitUI(sceneController);
+            InitScene(sceneController);
+            InitUI(sceneController);
 
             _gameStateMachine.Enter<GameLoopState>();
         }
@@ -55,7 +53,6 @@ namespace Modules.Core
         private void InitScene(GameplaySceneController sceneController)
         {
             InitPlayer(sceneController);
-       
         }
 
         private void InitPlayer(GameplaySceneController sceneController)
@@ -64,19 +61,6 @@ namespace Modules.Core
             sceneController.Player = player.GetComponent<PlayerView>();
             InitObject(player.transform, sceneController.PlayerSpawnPoint);
         }
-
-
-      
-
-        // private void InitEnemies(GameplaySceneController sceneController)
-        // {
-        //     foreach (var sceneControllerEnemiesMarker in sceneController.EnemiesMarkers)
-        //     {
-        //         var currentEnemy = _sceneFactory.CreateEnemy();
-        //         sceneController.Enemies.Add(currentEnemy.GetComponent<EnemyView>());
-        //         InitObject(currentEnemy.transform, sceneControllerEnemiesMarker);
-        //     }
-        // }
 
         private void InitObject(Transform currentObject, Transform marker)
         {

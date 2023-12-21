@@ -22,7 +22,6 @@ namespace Modules.Gameplay
 
         private void InputSourceOnTap(InputEventData inputEventData)
         {
-            Debug.Log("InputSourceOnTap");
             if (!CanControl) return;
             _playerView.ReflectionLine.SetActive(true);
         }
@@ -30,7 +29,6 @@ namespace Modules.Gameplay
         private void InputSourceOnDragStarted(InputEventData inputEventData)
         {
             _inputEventData = inputEventData;
-            Debug.Log("InputSourceOnDragStarted");
         }
 
         private void InputSourceOnDragging(InputEventData inputEventData)
@@ -42,13 +40,11 @@ namespace Modules.Gameplay
             Vector3 lookAtPosition = GetLookAtPosition(_inputEventData.InputPosition);
             _playerView.transform.LookAt(new Vector3(lookAtPosition.x, _playerView.transform.position.y,
                 lookAtPosition.z));
-            Debug.Log("InputSourceOnDragging");
         }
 
         private void InputSourceOnDrop(InputEventData inputEventData)
         {
             _inputEventData = inputEventData;
-            Debug.Log("InputSourceOnDrop");
             if (!CanControl) return;
             _playerView.ReflectionLine.SetActive(false);
             _playerView.PlayerShoot.Shoot();

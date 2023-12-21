@@ -26,7 +26,7 @@ namespace Modules.Core
 
             _gameStateMachine = new GameStateMachine();
             AddStates();
-            
+
             _audioService.PlayMusic();
             _gameStateMachine.Enter<LoadProgressDataState>();
         }
@@ -35,9 +35,9 @@ namespace Modules.Core
         {
             var loadProgressDataState = new LoadProgressDataState(_dataService.ProgressData,
                 _dataService.ApplicationCache, _lifecycleService, _gameStateMachine);
-            var loadLevelState = new LoadLevelState(_audioService, _factoryService.SceneFactory,
-                _factoryService.UIFactory, _sceneTransitionService, _gameStateMachine,_dataService.ProgressData);
-            var gameLoopState = new GameLoopState(_dataService.ProgressData.Level, _inputService.InputSource,
+            var loadLevelState = new LoadLevelState(_factoryService.SceneFactory,
+                _factoryService.UIFactory, _sceneTransitionService, _gameStateMachine, _dataService.ProgressData);
+            var gameLoopState = new GameLoopState(_dataService.ProgressData, _inputService.InputSource,
                 _audioService, _sceneTransitionService, _gameStateMachine);
 
             _gameStateMachine.States.Add(typeof(LoadProgressDataState), loadProgressDataState);
@@ -47,7 +47,7 @@ namespace Modules.Core
 
         private void InitializeServices()
         {
-            _assetProviderService = new AssetProviderServiceService();
+            _assetProviderService = new AssetProviderService();
             _factoryService = new FactoryService(_assetProviderService);
             _inputService = new InputService();
             _dataService = new DataService();

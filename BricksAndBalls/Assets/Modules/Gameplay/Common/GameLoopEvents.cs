@@ -6,5 +6,8 @@ namespace Modules.Gameplay
     {
         public Action OnFail;
         public Action OnWin;
+        public Action OnScoreIncrease;
+        public Action OnMoveObstacles;
+        public Action OnDestroyObstacle;
     }
 }

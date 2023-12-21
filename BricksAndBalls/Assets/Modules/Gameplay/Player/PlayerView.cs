@@ -1,4 +1,5 @@
-﻿using Modules.Common;
+﻿using System;
+using Modules.Common;
 using UnityEngine;
 
 namespace Modules.Gameplay
@@ -12,9 +13,9 @@ namespace Modules.Gameplay
 
         public GameObject ReflectionLine => reflectionLine;
 
-        public void Initialize(GameLoopEvents gameLoopEvents, IAudioService audioService)
+        public void Initialize(GameLoopEvents gameLoopEvents, IAudioService audioService, int maxBallCount)
         {
-            playerShoot.Initialize(audioService);
+            playerShoot.Initialize(gameLoopEvents,audioService,maxBallCount);
         }
         
     }

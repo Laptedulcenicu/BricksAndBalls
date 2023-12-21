@@ -311,12 +311,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39581ccfe5bb43f9a0079945b58d9ce0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shootAudio: {fileID: 0}
+  shootAudio: {fileID: 8300000, guid: cea8a2bd4bec36f4fbaa5cd0e56086be, type: 3}
   bulletParent: {fileID: 7989189685070447021}
   bulletPrefab: {fileID: 8835485307585831834, guid: ecdda0f8c90a8a845b35df79fc6d10d1, type: 3}
   ballCounterText: {fileID: 8937832447151653052}
-  textParent: {fileID: 8801113555904778111}
-  maxBullets: 20
 --- !u!1001 &5186170065397078995
 PrefabInstance:
   m_ObjectHideFlags: 0
